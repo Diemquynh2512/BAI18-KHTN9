@@ -456,7 +456,7 @@
               <i data-lucide="send" class="w-5 h-5 text-lab-600"></i>
               <span>Hoàn thành & Nộp Phiếu học tập cho Giáo viên</span>
             </h3>
-            <p class="text-xs text-slate-600 mt-0.5">Nhập địa chỉ Gmail của Giáo viên nhận bài để mở trực tiếp Gmail của học sinh gửi bài hoặc xuất file PDF lưu trữ.</p>
+            <p class="text-xs text-slate-600 mt-0.5">Khi bấm Nộp phiếu học tập, hệ thống sẽ đồng thời gửi bài lên trang quản lý Teacher LMS và mở sẵn Gmail gửi về địa chỉ của Giáo viên.</p>
           </div>
         </div>
 
@@ -2714,9 +2714,56 @@
       showToast('Đã sao chép toàn bộ nội dung Phiếu học tập vào bộ nhớ tạm!', 'success');
     }
 
-        async function submitWorksheet() {
+    function buildStructuredDetailedAnswers() {
+      const detailedExperiments = EXPERIMENT_GROUPS.map((exp, idx) => {
+        const p = appState.predictions[exp.id] || { willReact: '', phenomenon: '' };
+        const o = appState.observations[exp.id] || { external: '', microChange: '' };
+        const e = appState.explanations[exp.id] || { scientific: '' };
+        const trials = appState.trialsLog
+          .filter(t => t.expId === exp.id)
+          .map(t => `${t.label} (${t.time})`);
+        return {
+          stt: idx + 1,
+          id: exp.id,
+          ten_thi_nghiem: exp.title,
+          phep_thu_da_lam: trials,
+          nhiem_vu_1_du_doan: {
+            kha_nang_phan_ung: p.willReact,
+            hien_tuong_du_doan: p.phenomenon
+          },
+          nhiem_vu_2_quan_sat: {
+            hien_tuong_ben_ngoai: o.external,
+            bien_doi_vi_mo_lien_ket: o.microChange
+          },
+          nhiem_vu_3_giai_thich: e.scientific
+        };
+      });
+
+      return {
+        // Giữ nguyên các khóa gốc để tương thích ngược với LMS
+        task1_predictions: appState.predictions,
+        task2_observations: appState.observations,
+        task3_explanations: appState.explanations,
+        // Bổ sung dữ liệu chi tiết đầy đủ giống hệt bản gửi Gmail để LMS hiển thị rõ ràng
+        exec_date: appState.groupInfo.execDate,
+        trials_log: appState.trialsLog,
+        detailed_experiments: detailedExperiments,
+        full_report_text: buildPlainReport()
+      };
+    }
+
+    function openGmailCompose(teacherEmail, groupName, plainReport) {
+      if (!teacherEmail) return;
+      const subject = `[KHTN 9 - Bài 18] Phiếu học tập số - ${groupName} (${activeClassCode})`;
+      const gmailWebUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(teacherEmail)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(plainReport)}`;
+      window.open(gmailWebUrl, '_blank', 'noopener,noreferrer');
+    }
+
+    async function submitWorksheet() {
       const groupName = appState.groupInfo.groupName.trim() || document.getElementById('input-group-name')?.value.trim();
       const members = appState.groupInfo.members.filter(m => m && m.trim()).join(', ');
+      const teacherEmail = (document.getElementById('teacher-email-input')?.value || appState.submissionTarget.email || '').trim();
+      const gasUrl = (document.getElementById('teacher-gas-input')?.value || appState.submissionTarget.gasUrl || '').trim();
       const feedbackBox = document.getElementById('submission-feedback-box');
       const btn = document.getElementById('btn-submit-final');
 
@@ -2726,61 +2773,107 @@
         return;
       }
 
+      saveSubmissionTarget();
+      const plainReport = buildPlainReport();
+      const structuredAnswers = buildStructuredDetailedAnswers();
+
       const payload = {
         class_code: activeClassCode,
         worksheet_code: activeWorksheetCode,
         group_name: groupName,
         members: members,
-        answers: {
-          task1_predictions: appState.predictions,
-          task2_observations: appState.observations,
-          task3_explanations: appState.explanations
-        }
+        teacher_email: teacherEmail,
+        answers: structuredAnswers
       };
 
       if (btn) {
         btn.disabled = true;
-        btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> <span>Đang gửi bài về Teacher LMS...</span>`;
+        btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> <span>Đang đồng bộ LMS & Gmail...</span>`;
         lucide.createIcons();
       }
 
+      let lmsSuccess = false;
+      let lmsMessage = '';
+      let submissionId = 'OK';
+
+      // 1. Gửi dữ liệu đầy đủ về hệ thống Teacher LMS
       try {
         const response = await fetch(LMS_CONFIG.API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-
         const result = await response.json();
-        if (!response.ok) throw new Error(result.error || 'Lỗi gửi bài');
+        if (!response.ok) throw new Error(result.error || 'Lỗi máy chủ LMS');
+        lmsSuccess = true;
+        submissionId = result.submission_id || 'OK';
+      } catch (err) {
+        lmsMessage = err.message;
+      }
 
+      // 2. Gửi qua Google Apps Script nếu giáo viên có cung cấp liên kết
+      let gasSent = false;
+      if (gasUrl) {
+        try {
+          await fetch(gasUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...payload, plain_report: plainReport })
+          });
+          gasSent = true;
+        } catch (e) {
+          console.warn('GAS error:', e);
+        }
+      }
+
+      // 3. Đồng thời mở Gmail soạn sẵn toàn bộ nội dung bài làm gửi về Gmail giáo viên
+      if (teacherEmail) {
+        openGmailCompose(teacherEmail, groupName, plainReport);
+      }
+
+      if (lmsSuccess) {
         feedbackBox.className = 'rounded-xl p-4 border border-emerald-300 bg-emerald-50 text-emerald-900 text-xs sm:text-sm space-y-2';
         feedbackBox.innerHTML = `
-          <strong>✓ Nộp bài thành công về Teacher LMS!</strong>
-          <p class="text-xs text-emerald-700">Mã bài nộp: <code>${result.submission_id || 'OK'}</code> • Lớp: <strong>${activeClassCode}</strong> • Phiếu: <strong>${activeWorksheetCode}</strong></p>
-          <div class="pt-1 flex gap-2">
-            <button type="button" onclick="exportToPDF()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs">Xuất PDF lưu trữ</button>
+          <div><strong>✓ Đã nộp bài thành công lên hệ thống Teacher LMS!</strong></div>
+          <p class="text-xs text-emerald-800">
+            Mã bài nộp: <code>${escapeHtml(submissionId)}</code> • Lớp: <strong>${escapeHtml(activeClassCode)}</strong> • Phiếu: <strong>${escapeHtml(activeWorksheetCode)}</strong>
+          </p>
+          ${teacherEmail
+            ? `<p class="text-xs text-emerald-800">✓ Đã mở cửa sổ <strong>Gmail</strong> soạn sẵn toàn bộ nội dung phiếu học tập gửi tới <strong>${escapeHtml(teacherEmail)}</strong> (hãy nhấn nút <strong>Gửi / Send</strong> trong tab Gmail vừa mở).</p>`
+            : `<p class="text-xs text-amber-800">Lưu ý: Bạn chưa nhập Gmail giáo viên nên hệ thống chỉ mới gửi về Teacher LMS.</p>`
+          }
+          ${gasSent ? `<p class="text-xs text-emerald-800">✓ Đã đồng bộ tự động qua liên kết Google Apps Script.</p>` : ''}
+          <div class="pt-1 flex flex-wrap gap-2">
+            ${teacherEmail ? `<button type="button" onclick="openGmailCompose('${escapeHtml(teacherEmail)}', '${escapeHtml(groupName)}', buildPlainReport())" class="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs">Mở lại cửa sổ Gmail</button>` : ''}
+            <button type="button" onclick="copyReportToClipboard()" class="px-3 py-1.5 rounded-lg bg-white border border-emerald-300 hover:bg-emerald-100 text-emerald-900 font-bold text-xs">Sao chép nội dung bài</button>
+            <button type="button" onclick="exportToPDF()" class="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs">Xuất PDF lưu trữ</button>
           </div>
         `;
         feedbackBox.classList.remove('hidden');
-        showToast('Nộp bài thành công về hệ thống Teacher LMS!', 'success');
-      } catch (err) {
-        feedbackBox.className = 'rounded-xl p-4 border border-rose-300 bg-rose-50 text-rose-900 text-xs sm:text-sm space-y-2';
+        showToast(teacherEmail ? 'Đã gửi lên LMS và mở Gmail gửi giáo viên!' : 'Đã nộp bài thành công về Teacher LMS!', 'success');
+      } else {
+        feedbackBox.className = 'rounded-xl p-4 border border-amber-300 bg-amber-50 text-amber-950 text-xs sm:text-sm space-y-2';
         feedbackBox.innerHTML = `
-          <div><strong>Không thể nộp bài về Teacher LMS:</strong> ${escapeHtml(err.message)}</div>
-          <p class="text-xs text-slate-600">Bạn có thể kiểm tra lại kết nối mạng hoặc xuất file PDF bên dưới.</p>
-          <div class="flex gap-2 pt-1">
+          <div><strong>⚠ Chưa kết nối được với máy chủ Teacher LMS:</strong> ${escapeHtml(lmsMessage)}</div>
+          ${teacherEmail
+            ? `<p class="text-xs text-amber-900">✓ Tuy nhiên, hệ thống đã mở sẵn <strong>Gmail</strong> với đầy đủ nội dung bài làm gửi tới <strong>${escapeHtml(teacherEmail)}</strong> để đảm bảo nộp bài kịp thời.</p>`
+            : `<p class="text-xs text-amber-900">Hãy nhập địa chỉ Gmail giáo viên ở ô trên và bấm nộp lại, hoặc xuất file PDF bên dưới.</p>`
+          }
+          <div class="flex flex-wrap gap-2 pt-1">
+            ${teacherEmail ? `<button type="button" onclick="openGmailCompose('${escapeHtml(teacherEmail)}', '${escapeHtml(groupName)}', buildPlainReport())" class="px-3 py-1.5 rounded-lg bg-sky-600 text-white font-bold text-xs">Mở lại Gmail</button>` : ''}
+            <button type="button" onclick="copyReportToClipboard()" class="px-3 py-1.5 rounded-lg bg-white border border-amber-300 text-amber-900 font-bold text-xs">Sao chép bài làm</button>
             <button type="button" onclick="exportToPDF()" class="px-3 py-1.5 rounded-lg bg-slate-800 text-white font-bold text-xs">Xuất PDF</button>
           </div>
         `;
         feedbackBox.classList.remove('hidden');
-        showToast('Lỗi nộp bài: ' + err.message, 'error');
-      } finally {
-        if (btn) {
-          btn.disabled = false;
-          btn.innerHTML = `<i data-lucide="send" class="w-4 h-4"></i> <span>NỘP PHIẾU HỌC TẬP</span>`;
-          lucide.createIcons();
-        }
+        showToast('LMS gặp lỗi kết nối, đã chuyển sang phương án dự phòng Gmail/PDF.', 'warning');
+      }
+
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="send" class="w-4 h-4"></i> <span>NỘP PHIẾU HỌC TẬP</span>`;
+        lucide.createIcons();
       }
     }
 
