@@ -2715,41 +2715,28 @@
     }
 
     function buildStructuredDetailedAnswers() {
-      const detailedExperiments = EXPERIMENT_GROUPS.map((exp, idx) => {
+      const flatCleanAnswers = {
+        "Ngày thực hiện": appState.groupInfo.execDate || "",
+        "Nhật ký các phép thử đã làm": appState.trialsLog.length > 0
+          ? appState.trialsLog.map((t, i) => `${i + 1}. [${t.groupTitle}] ${t.label}`).join('\n')
+          : "Chưa ghi nhận phép thử"
+      };
+
+      EXPERIMENT_GROUPS.forEach((exp, idx) => {
         const p = appState.predictions[exp.id] || { willReact: '', phenomenon: '' };
         const o = appState.observations[exp.id] || { external: '', microChange: '' };
         const e = appState.explanations[exp.id] || { scientific: '' };
-        const trials = appState.trialsLog
-          .filter(t => t.expId === exp.id)
-          .map(t => `${t.label} (${t.time})`);
-        return {
-          stt: idx + 1,
-          id: exp.id,
-          ten_thi_nghiem: exp.title,
-          phep_thu_da_lam: trials,
-          nhiem_vu_1_du_doan: {
-            kha_nang_phan_ung: p.willReact,
-            hien_tuong_du_doan: p.phenomenon
-          },
-          nhiem_vu_2_quan_sat: {
-            hien_tuong_ben_ngoai: o.external,
-            bien_doi_vi_mo_lien_ket: o.microChange
-          },
-          nhiem_vu_3_giai_thich: e.scientific
-        };
+
+        flatCleanAnswers[`Thí nghiệm ${idx + 1} (${exp.shortTitle})`] = [
+          `• Dự đoán khả năng phản ứng: ${p.willReact || '(Trống)'}`,
+          `• Dự đoán hiện tượng: ${p.phenomenon || '(Trống)'}`,
+          `• Quan sát hiện tượng bên ngoài: ${o.external || '(Trống)'}`,
+          `• Biến đổi hạt vi mô & liên kết: ${o.microChange || '(Trống)'}`,
+          `• Giải thích khoa học & PTHH: ${e.scientific || '(Trống)'}`
+        ].join('\n');
       });
 
-      return {
-        // Giữ nguyên các khóa gốc để tương thích ngược với LMS
-        task1_predictions: appState.predictions,
-        task2_observations: appState.observations,
-        task3_explanations: appState.explanations,
-        // Bổ sung dữ liệu chi tiết đầy đủ giống hệt bản gửi Gmail để LMS hiển thị rõ ràng
-        exec_date: appState.groupInfo.execDate,
-        trials_log: appState.trialsLog,
-        detailed_experiments: detailedExperiments,
-        full_report_text: buildPlainReport()
-      };
+      return flatCleanAnswers;
     }
 
     function openGmailCompose(teacherEmail, groupName, plainReport) {
