@@ -2715,28 +2715,40 @@
     }
 
     function buildStructuredDetailedAnswers() {
-      const flatCleanAnswers = {
-        "Ngày thực hiện": appState.groupInfo.execDate || "",
-        "Nhật ký các phép thử đã làm": appState.trialsLog.length > 0
-          ? appState.trialsLog.map((t, i) => `${i + 1}. [${t.groupTitle}] ${t.label}`).join('\n')
-          : "Chưa ghi nhận phép thử"
-      };
+      const task1_predictions = {};
+      const task2_observations = {};
+      const task3_explanations = {};
 
       EXPERIMENT_GROUPS.forEach((exp, idx) => {
         const p = appState.predictions[exp.id] || { willReact: '', phenomenon: '' };
         const o = appState.observations[exp.id] || { external: '', microChange: '' };
         const e = appState.explanations[exp.id] || { scientific: '' };
+        const trials = appState.trialsLog
+          .filter(t => t.expId === exp.id)
+          .map(t => t.label)
+          .join(', ');
 
-        flatCleanAnswers[`Thí nghiệm ${idx + 1} (${exp.shortTitle})`] = [
-          `• Dự đoán khả năng phản ứng: ${p.willReact || '(Trống)'}`,
-          `• Dự đoán hiện tượng: ${p.phenomenon || '(Trống)'}`,
-          `• Quan sát hiện tượng bên ngoài: ${o.external || '(Trống)'}`,
-          `• Biến đổi hạt vi mô & liên kết: ${o.microChange || '(Trống)'}`,
-          `• Giải thích khoa học & PTHH: ${e.scientific || '(Trống)'}`
+        const label = `Thí nghiệm ${idx + 1} (${exp.shortTitle})`;
+
+        task1_predictions[label] = [
+          `Khả năng phản ứng: ${p.willReact || '(Chưa nhập)'}`,
+          `Hiện tượng dự đoán: ${p.phenomenon || '(Chưa nhập)'}`
         ].join('\n');
+
+        task2_observations[label] = [
+          trials ? `Phép thử đã thực hiện: ${trials}` : '',
+          `Hiện tượng bên ngoài: ${o.external || '(Chưa nhập)'}`,
+          `Biến đổi hạt vi mô & liên kết: ${o.microChange || '(Chưa nhập)'}`
+        ].filter(Boolean).join('\n');
+
+        task3_explanations[label] = e.scientific || '(Chưa nhập)';
       });
 
-      return flatCleanAnswers;
+      return {
+        task1_predictions,
+        task2_observations,
+        task3_explanations
+      };
     }
 
     function openGmailCompose(teacherEmail, groupName, plainReport) {
