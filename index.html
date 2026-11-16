@@ -68,7 +68,6 @@
       background-color: rgba(224, 242, 254, 0.55) !important;
       box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.18);
     }
-    /* Custom scrollbar */
     ::-webkit-scrollbar {
       width: 7px;
       height: 7px;
@@ -84,7 +83,6 @@
     ::-webkit-scrollbar-thumb:hover {
       background: #94a3b8;
     }
-    /* Print A4 formatting */
     @media print {
       body * {
         visibility: hidden;
@@ -122,7 +120,7 @@
 </head>
 <body class="min-h-screen flex flex-col selection:bg-lab-200 selection:text-lab-900">
 
-  <!-- TOP NAVIGATION BAR (TINH GỌN, KHÔNG CÓ NÚT CẤU HÌNH GV HAY LÀM MỚI PHIẾU) -->
+  <!-- TOP NAVIGATION BAR -->
   <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs no-print">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2">
       <div class="flex items-center gap-2.5">
@@ -225,7 +223,7 @@
     </section>
 
     <!-- =====================================================================
-         NHIỆM VỤ 1: DỰ ĐOÁN HIỆN TƯỢNG (2 CÂU HỎI TỰ LUẬN, ĐẠI DIỆN TỪNG NHÓM KIM LOẠI)
+         NHIỆM VỤ 1: DỰ ĐOÁN HIỆN TƯỢNG (2 CÂU HỎI TỰ LUẬN)
          ===================================================================== -->
     <section id="view-step-1" class="hidden space-y-5">
       <div class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -341,7 +339,7 @@
             </div>
           </div>
 
-          <!-- MÀN HÌNH KÍNH HIỂN VI VI MÔ (KHÔNG PHƯƠNG TRÌNH SẴN, KHÔNG VĂN BẢN GIẢI THÍCH SẴN, RÕ NÉT ĐỨT LIÊN KẾT) -->
+          <!-- MÀN HÌNH KÍNH HIỂN VI VI MÔ -->
           <div class="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-sm text-white">
             <div class="px-4 py-2.5 bg-slate-950/70 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2">
               <div class="flex items-center gap-2">
@@ -373,7 +371,7 @@
           </div>
         </div>
 
-        <!-- CỘT 3: GHI NHẬN KẾT QUẢ QUAN SÁT (CHỈ 2 CÂU HỎI THEO YÊU CẦU) (4 COLS) -->
+        <!-- CỘT 3: GHI NHẬN KẾT QUẢ QUAN SÁT (2 CÂU HỎI) (4 COLS) -->
         <div class="lg:col-span-4 bg-white rounded-2xl border border-slate-200 p-4 shadow-xs space-y-4">
           <div class="border-b border-slate-100 pb-2.5">
             <span class="text-[11px] font-bold uppercase tracking-wider text-tealab-700">Nhật ký thực nghiệm</span>
@@ -448,7 +446,7 @@
 
       <div id="nv3-cards-container" class="space-y-5"></div>
 
-      <!-- KHU VỰC NỘP PHIẾU HỌC TẬP CHO GIÁO VIÊN (QUA GMAIL CỦA HỌC SINH HOẶC XUẤT PDF) -->
+      <!-- KHU VỰC NỘP PHIẾU HỌC TẬP CHO GIÁO VIÊN -->
       <div class="bg-white rounded-2xl border-2 border-lab-200 p-5 sm:p-6 shadow-sm space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
           <div>
@@ -535,6 +533,7 @@
     const urlParams = new URLSearchParams(window.location.search);
     const activeClassCode = urlParams.get("class") || LMS_CONFIG.DEFAULT_CLASS_CODE;
     const activeWorksheetCode = urlParams.get("ws") || LMS_CONFIG.DEFAULT_WORKSHEET_CODE;
+
     // =========================================================================
     // 1. DỮ LIỆU KHOA HỌC & CẤU HÌNH 5 NHÓM THÍ NGHIỆM (CHUẨN SGK KHTN 9)
     // =========================================================================
@@ -555,12 +554,20 @@
         reactivityRank: 2,
         shortDesc: 'Kim loại hoạt động mạnh'
       },
+      Al: {
+        symbol: 'Al',
+        name: 'Nhôm (Aluminium)',
+        colorHex: '#d1d5db',
+        strokeHex: '#4b5563',
+        reactivityRank: 3,
+        shortDesc: 'Kim loại hoạt động mạnh (có màng oxide)'
+      },
       Zn: {
         symbol: 'Zn',
         name: 'Kẽm (Zinc)',
         colorHex: '#94a3b8',
         strokeHex: '#334155',
-        reactivityRank: 3,
+        reactivityRank: 4,
         shortDesc: 'Kim loại hoạt động trung bình'
       },
       Fe: {
@@ -568,7 +575,7 @@
         name: 'Sắt (Iron)',
         colorHex: '#64748b',
         strokeHex: '#1e293b',
-        reactivityRank: 4,
+        reactivityRank: 5,
         shortDesc: 'Kim loại hoạt động trung bình'
       },
       Cu: {
@@ -576,8 +583,16 @@
         name: 'Đồng (Copper)',
         colorHex: '#ea580c',
         strokeHex: '#9a3412',
-        reactivityRank: 5,
+        reactivityRank: 6,
         shortDesc: 'Kim loại hoạt động yếu (sau H)'
+      },
+      Au: {
+        symbol: 'Au',
+        name: 'Vàng (Gold)',
+        colorHex: '#facc15',
+        strokeHex: '#a16207',
+        reactivityRank: 7,
+        shortDesc: 'Kim loại rất kém hoạt động'
       }
     };
 
@@ -586,12 +601,12 @@
         id: 'exp1',
         shortTitle: '1. Tác dụng với O₂',
         title: 'Thí nghiệm 1: Kim loại tác dụng với khí Oxygen (O₂)',
-        nv1Prompt: 'Đưa lần lượt các kim loại đại diện cho các mức độ hoạt động hóa học khác nhau: Dải Magie (Mg), Đinh sắt (Fe) và Cuộn dây đồng (Cu) vào bình chứa khí Oxygen (O₂) và đun nóng/đốt cháy.',
-        nv1Metals: ['Mg', 'Fe', 'Cu'],
+        nv1Prompt: 'Đưa lần lượt các kim loại đại diện: Dải Magie (Mg), Lá Nhôm (Al), Đinh sắt (Fe), Cuộn dây đồng (Cu) và Thỏi vàng (Au) vào bình chứa khí Oxygen (O₂) (ở điều kiện thường và khi đun nóng).',
+        nv1Metals: ['Mg', 'Al', 'Fe', 'Cu', 'Au'],
         vessels: [
           { id: 'jar_o2', name: 'Bình khí Oxygen (O₂)', formula: 'O₂', type: 'gas', bg: '#e0f2fe', liquidColor: 'rgba(186, 230, 253, 0.25)' }
         ],
-        metals: ['Mg', 'Fe', 'Cu'],
+        metals: ['Mg', 'Al', 'Fe', 'Cu', 'Au'],
         defaultVessel: 'jar_o2',
         needsIndicator: false
       },
@@ -599,12 +614,12 @@
         id: 'exp2',
         shortTitle: '2. Tác dụng với Cl₂',
         title: 'Thí nghiệm 2: Kim loại tác dụng với phi kim Chlorine (Cl₂)',
-        nv1Prompt: 'Cho các kim loại đại diện: Mẫu Natri (Na), Đinh sắt (Fe) và Cuộn dây đồng (Cu) tác dụng với khí Chlorine (Cl₂, màu vàng lục) trong bình thủy tinh.',
-        nv1Metals: ['Na', 'Fe', 'Cu'],
+        nv1Prompt: 'Cho các kim loại đại diện: Mẫu Natri (Na), Lá Nhôm (Al), Đinh sắt (Fe), Cuộn dây đồng (Cu) và Thỏi vàng (Au) tác dụng với khí Chlorine (Cl₂, màu vàng lục) trong bình thủy tinh.',
+        nv1Metals: ['Na', 'Al', 'Fe', 'Cu', 'Au'],
         vessels: [
           { id: 'jar_cl2', name: 'Bình khí Chlorine (Cl₂)', formula: 'Cl₂', type: 'gas', bg: '#fef9c3', liquidColor: 'rgba(250, 204, 21, 0.26)' }
         ],
-        metals: ['Na', 'Fe', 'Cu'],
+        metals: ['Na', 'Al', 'Fe', 'Cu', 'Au'],
         defaultVessel: 'jar_cl2',
         needsIndicator: false
       },
@@ -612,12 +627,12 @@
         id: 'exp3',
         shortTitle: '3. Tác dụng với H₂O',
         title: 'Thí nghiệm 3: Kim loại tác dụng với Nước (H₂O)',
-        nv1Prompt: 'Cho lần lượt Mẫu Natri (Na), Dải Magie (Mg) và Cuộn dây đồng (Cu) vào cốc chứa nước cất (H₂O) có nhỏ vài giọt dung dịch phenolphthalein (ở nhiệt độ thường và khi đun nóng).',
-        nv1Metals: ['Na', 'Mg', 'Cu'],
+        nv1Prompt: 'Cho lần lượt Mẫu Natri (Na), Lá Nhôm (Al), Đinh sắt (Fe), Cuộn dây đồng (Cu) và Thỏi vàng (Au) vào cốc chứa nước cất (H₂O) có nhỏ vài giọt dung dịch phenolphthalein.',
+        nv1Metals: ['Na', 'Al', 'Fe', 'Cu', 'Au'],
         vessels: [
           { id: 'beaker_h2o', name: 'Cốc nước cất (H₂O)', formula: 'H₂O', type: 'liquid', bg: '#f0f9ff', liquidColor: 'rgba(186, 230, 253, 0.45)' }
         ],
-        metals: ['Na', 'Mg', 'Cu'],
+        metals: ['Na', 'Al', 'Fe', 'Cu', 'Au'],
         defaultVessel: 'beaker_h2o',
         needsIndicator: true
       },
@@ -625,12 +640,12 @@
         id: 'exp4',
         shortTitle: '4. Tác dụng với HCl',
         title: 'Thí nghiệm 4: Kim loại tác dụng với dung dịch Acid (HCl loãng)',
-        nv1Prompt: 'Cho lần lượt Dải Magie (Mg), Hạt kẽm (Zn), Đinh sắt (Fe) và Cuộn dây đồng (Cu) vào ống nghiệm chứa dung dịch Hydrochloric acid (HCl loãng, không màu).',
-        nv1Metals: ['Mg', 'Zn', 'Fe', 'Cu'],
+        nv1Prompt: 'Cho lần lượt Dải Magie (Mg), Lá Nhôm (Al), Đinh sắt (Fe), Cuộn dây đồng (Cu) và Thỏi vàng (Au) vào ống nghiệm chứa dung dịch Hydrochloric acid (HCl loãng, không màu).',
+        nv1Metals: ['Mg', 'Al', 'Fe', 'Cu', 'Au'],
         vessels: [
           { id: 'tube_hcl', name: 'Ống nghiệm dd HCl loãng', formula: 'HCl (dd)', type: 'liquid', bg: '#f8fafc', liquidColor: 'rgba(226, 232, 240, 0.5)' }
         ],
-        metals: ['Mg', 'Zn', 'Fe', 'Cu'],
+        metals: ['Mg', 'Al', 'Fe', 'Cu', 'Au'],
         defaultVessel: 'tube_hcl',
         needsIndicator: false
       },
@@ -638,26 +653,25 @@
         id: 'exp5',
         shortTitle: '5. Tác dụng với Muối',
         title: 'Thí nghiệm 5: Kim loại tác dụng với dung dịch Muối',
-        nv1Prompt: 'Nhúng lần lượt Đinh sắt (Fe) và Cuộn dây đồng (Cu) vào các ống nghiệm chứa dung dịch muối: Copper(II) sulfate (CuSO₄, xanh lam), Silver nitrate (AgNO₃, không màu) và Iron(II) sulfate (FeSO₄, xanh lục nhạt).',
-        nv1Metals: ['Fe', 'Cu', 'Zn'],
+        nv1Prompt: 'Nhúng lần lượt Lá Nhôm (Al), Hạt kẽm (Zn), Đinh sắt (Fe), Cuộn dây đồng (Cu) và Thỏi vàng (Au) vào các ống nghiệm chứa dung dịch muối: Copper(II) sulfate (CuSO₄), Silver nitrate (AgNO₃) và Iron(II) sulfate (FeSO₄).',
+        nv1Metals: ['Al', 'Zn', 'Fe', 'Cu', 'Au'],
         vessels: [
           { id: 'tube_cuso4', name: 'Ống nghiệm dd CuSO₄ (xanh lam)', formula: 'CuSO₄', type: 'liquid', bg: '#dbeafe', liquidColor: 'rgba(37, 99, 235, 0.42)' },
           { id: 'tube_agno3', name: 'Ống nghiệm dd AgNO₃ (không màu)', formula: 'AgNO₃', type: 'liquid', bg: '#f8fafc', liquidColor: 'rgba(226, 232, 240, 0.45)' },
           { id: 'tube_feso4', name: 'Ống nghiệm dd FeSO₄ (xanh lục nhạt)', formula: 'FeSO₄', type: 'liquid', bg: '#dcfce7', liquidColor: 'rgba(74, 222, 128, 0.28)' }
         ],
-        metals: ['Fe', 'Cu', 'Zn'],
+        metals: ['Al', 'Zn', 'Fe', 'Cu', 'Au'],
         defaultVessel: 'tube_cuso4',
         needsIndicator: false
       }
     ];
 
     // =========================================================================
-    // 2. HÀM ĐỒ HỌA SVG MẪU VẬT KIM LOẠI ĐA DẠNG & ĐÈN CỒN CHÂN THỰC
+    // 2. HÀM ĐỒ HỌA SVG MẪU VẬT KIM LOẠI ĐA DẠNG & ĐÈN CỒN BO TRÒN MỀM MẠI
     // =========================================================================
     function getMetalSVG(symbol, sizeClass = 'w-12 h-12') {
       switch (symbol) {
         case 'Na':
-          // Viên Natri mềm cắt vát hình khối đa diện ánh bạc sáng
           return `<svg viewBox="0 0 64 64" class="${sizeClass}">
             <defs>
               <linearGradient id="naGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -672,7 +686,6 @@
             <line x1="38" y1="30" x2="50" y2="22" stroke="#64748b" stroke-width="1.5"/>
           </svg>`;
         case 'Mg':
-          // Dải ruy-băng Magie uốn lượn ánh kim
           return `<svg viewBox="0 0 64 64" class="${sizeClass}">
             <defs>
               <linearGradient id="mgGrad" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -686,8 +699,19 @@
             <path d="M12,44 C10,30 28,28 26,18 C24,10 42,10 44,20 C46,32 28,34 32,46 C35,54 52,50 52,38"
               fill="none" stroke="#475569" stroke-width="1.2" stroke-linecap="round"/>
           </svg>`;
+        case 'Al':
+          return `<svg viewBox="0 0 64 64" class="${sizeClass}">
+            <defs>
+              <linearGradient id="alGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f3f4f6"/>
+                <stop offset="50%" stop-color="#d1d5db"/>
+                <stop offset="100%" stop-color="#9ca3af"/>
+              </linearGradient>
+            </defs>
+            <rect x="11" y="21" width="42" height="22" rx="4" transform="rotate(-14 32 32)" fill="url(#alGrad)" stroke="#4b5563" stroke-width="1.8"/>
+            <line x1="16" y1="29" x2="46" y2="22" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" opacity="0.85"/>
+          </svg>`;
         case 'Zn':
-          // Cụm hạt kẽm viên xù xì (zinc granules) màu xám xanh
           return `<svg viewBox="0 0 64 64" class="${sizeClass}">
             <path d="M16,38 C12,30 20,22 28,25 C34,27 33,38 25,42 C19,44 18,41 16,38 Z" fill="#94a3b8" stroke="#334155" stroke-width="1.8"/>
             <path d="M32,26 C30,17 42,14 48,21 C53,27 46,35 38,33 C33,32 33,29 32,26 Z" fill="#cbd5e1" stroke="#334155" stroke-width="1.8"/>
@@ -696,7 +720,6 @@
             <circle cx="40" cy="21" r="2.5" fill="#f8fafc" opacity="0.7"/>
           </svg>`;
         case 'Fe':
-          // Chiếc đinh sắt đầu mũ dẹt, thân trụ, mũi nhọn màu xám thép
           return `<svg viewBox="0 0 64 64" class="${sizeClass}">
             <defs>
               <linearGradient id="feGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -712,7 +735,6 @@
             </g>
           </svg>`;
         case 'Cu':
-          // Cuộn dây đồng xoắn ốc nhiều vòng màu đỏ cam ánh kim
           return `<svg viewBox="0 0 64 64" class="${sizeClass}">
             <ellipse cx="32" cy="22" rx="16" ry="7" fill="none" stroke="#c2410c" stroke-width="4"/>
             <ellipse cx="32" cy="29" rx="16" ry="7" fill="none" stroke="#ea580c" stroke-width="4"/>
@@ -720,54 +742,73 @@
             <ellipse cx="32" cy="43" rx="16" ry="7" fill="none" stroke="#c2410c" stroke-width="4"/>
             <path d="M16,22 L12,13 M48,43 L52,51" stroke="#ea580c" stroke-width="3.5" stroke-linecap="round"/>
           </svg>`;
+        case 'Au':
+          return `<svg viewBox="0 0 64 64" class="${sizeClass}">
+            <defs>
+              <linearGradient id="auGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#fef08a"/>
+                <stop offset="45%" stop-color="#facc15"/>
+                <stop offset="100%" stop-color="#ca8a04"/>
+              </linearGradient>
+            </defs>
+            <path d="M16,22 H48 L54,44 H10 L16,22 Z" fill="url(#auGrad)" stroke="#a16207" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M19,26 H45" stroke="#fef9c3" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>`;
         default:
           return '';
       }
     }
 
-    function getAlcoholLampSVG(isLit, sizeClass = 'w-11 h-14') {
-      return `<svg viewBox="0 0 64 80" class="${sizeClass}">
-        <defs>
-          <linearGradient id="glassLamp" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#e0f2fe" stop-opacity="0.9"/>
-            <stop offset="45%" stop-color="#ffffff" stop-opacity="0.95"/>
-            <stop offset="100%" stop-color="#bae6fd" stop-opacity="0.85"/>
-          </linearGradient>
-          <linearGradient id="alcoholLiquid" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.55"/>
-            <stop offset="100%" stop-color="#0284c7" stop-opacity="0.75"/>
-          </linearGradient>
-        </defs>
+    // Hình ảnh đèn cồn bo tròn mềm mại không góc cạnh giống mẫu cung cấp
+    function getAlcoholLampSVG(isLit, sizeClass = 'w-14 h-12') {
+      return `<svg viewBox="0 0 92 74" class="${sizeClass}" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Bầu thủy tinh bo tròn mềm mại -->
+        <path d="M22,28 C11,31 8,41 11,52 C14,63 22,68 35,68 C48,68 56,63 59,52 C62,41 59,31 48,28 H22 Z"
+          fill="#f8fafc" stroke="#94a3b8" stroke-width="2" stroke-linejoin="round"/>
+        <!-- Mực cồn xanh dương nhạt bên trong -->
+        <path d="M12.5,47 C15,61 22,66 35,66 C48,66 55,61 57.5,47 C48,49.5 22,49.5 12.5,47 Z"
+          fill="#7dd3fc" opacity="0.75"/>
+        <ellipse cx="35" cy="47" rx="22.5" ry="3.5" fill="#bae6fd" stroke="#38bdf8" stroke-width="1"/>
+        <!-- Bọt khí nhỏ trong cồn -->
+        <circle cx="26" cy="41" r="2.2" fill="#bae6fd" stroke="#0284c7" stroke-width="0.9"/>
+        <circle cx="43" cy="42" r="2.6" fill="#bae6fd" stroke="#0284c7" stroke-width="0.9"/>
+        <circle cx="30" cy="54" r="1.6" fill="#e0f2fe"/>
+        <!-- Sợi bấc bện uốn cong mềm mại -->
+        <path d="M35,18 V32 C35,41 25,46 27,54 C28.5,59 37,60 41,61"
+          stroke="#78350f" stroke-width="3" stroke-linecap="round" stroke-dasharray="2.5 1.5"/>
+        <!-- Ánh phản quang trắng mềm trên bầu thủy tinh -->
+        <path d="M16,35 C13,40 13,48 16,54" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" opacity="0.9"/>
+        <!-- Cổ chụp kim loại bo tròn -->
+        <path d="M26,28 V22 C26,19.5 28,18 31,18 H39 C42,18 44,19.5 44,22 V28 H26 Z"
+          fill="#cbd5e1" stroke="#64748b" stroke-width="1.6" stroke-linejoin="round"/>
+        <rect x="25" y="26" width="20" height="3.5" rx="1.75" fill="#94a3b8"/>
         ${isLit ? `
-          <!-- Ngọn lửa 3 lớp chân thực -->
-          <path d="M32,4 C25,15 24,23 32,27 C40,23 39,15 32,4 Z" fill="#f97316" opacity="0.9">
-            <animate attributeName="d" dur="0.65s" repeatCount="indefinite"
-              values="M32,4 C25,15 24,23 32,27 C40,23 39,15 32,4 Z;
-                      M33,2 C24,14 25,23 32,27 C39,23 41,14 33,2 Z;
-                      M31,5 C25,15 24,23 32,27 C40,23 38,15 31,5 Z"/>
+          <!-- Ngọn lửa 3 lớp (đỏ - cam - vàng) uốn lượn -->
+          <path d="M35,18 C27,17 24,11 27,6 C29.5,2 33,0.5 34.5,0 C34,3 38,5 41,8 C44,11.5 42,17 35,18 Z" fill="#dc2626">
+            <animate attributeName="d" dur="0.7s" repeatCount="indefinite"
+              values="M35,18 C27,17 24,11 27,6 C29.5,2 33,0.5 34.5,0 C34,3 38,5 41,8 C44,11.5 42,17 35,18 Z;
+                      M35,18 C27,17 24,11 27,6 C30,2 34,0.5 36,0 C35,3 38,5 41,8 C44,11.5 42,17 35,18 Z;
+                      M35,18 C27,17 24,11 27,6 C29.5,2 33,0.5 34.5,0 C34,3 38,5 41,8 C44,11.5 42,17 35,18 Z"/>
           </path>
-          <path d="M32,9 C27,17 27,23 32,26 C37,23 37,17 32,9 Z" fill="#facc15"/>
-          <path d="M32,17 C29,21 29,24 32,26 C35,24 35,21 32,17 Z" fill="#38bdf8"/>
-        ` : ''}
-        <!-- Bấc đèn sợi bện -->
-        <rect x="30" y="25" width="4" height="9" rx="1.5" fill="#f8fafc" stroke="#64748b" stroke-width="1"/>
-        <!-- Cổ kim loại giữ bấc -->
-        <rect x="24" y="32" width="16" height="6" rx="2" fill="#94a3b8" stroke="#334155" stroke-width="1.5"/>
-        <!-- Bầu thủy tinh liền khối -->
-        <path d="M25,38 L39,38 L52,58 C55,64 51,72 44,72 L20,72 C13,72 9,64 12,58 Z"
-          fill="url(#glassLamp)" stroke="#0284c7" stroke-width="2" stroke-linejoin="round"/>
-        <!-- Dung dịch cồn bên trong -->
-        <path d="M17,52 L47,52 L50,59 C52,64 49,70 43,70 L21,70 C15,70 12,64 14,59 Z"
-          fill="url(#alcoholLiquid)"/>
-        <!-- Ánh phản quang thủy tinh -->
-        <path d="M22,44 L17,56" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.85"/>
+          <path d="M35,18 C29.5,17 28,12.5 30,9 C31.5,6.5 33.5,5 34.5,4 C34.5,6.5 37.5,8 39,10.5 C40.5,13 39.5,17 35,18 Z" fill="#f97316"/>
+          <path d="M35,18 C32,17.5 31.2,14.5 32.5,12 C33.5,10.2 34.5,9.2 35,8.5 C35.2,10.2 36.8,11.2 37.5,13 C38.2,14.8 37.5,17.5 35,18 Z" fill="#fef08a"/>
+          <!-- Nắp đậy thủy tinh bo tròn đặt bên cạnh -->
+          <path d="M64,66 L66,51 C66.5,47 69.5,45 73.5,45 C77.5,45 80.5,47 81,51 L83,66 H64 Z"
+            fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.6" stroke-linejoin="round"/>
+          <rect x="63" y="64" width="21" height="3.5" rx="1.75" fill="#94a3b8"/>
+        ` : `
+          <!-- Nắp đậy thủy tinh úp kín lên cổ đèn khi tắt -->
+          <path d="M24,27 L26,14 C26.5,10.5 29.5,9 35,9 C40.5,9 43.5,10.5 44,14 L46,27 H24 Z"
+            fill="#e2e8f0" stroke="#64748b" stroke-width="1.6" stroke-linejoin="round"/>
+          <rect x="23" y="25.5" width="24" height="3.5" rx="1.75" fill="#94a3b8"/>
+        `}
       </svg>`;
     }
 
     // =========================================================================
     // 3. QUẢN LÝ TRẠNG THÁI ỨNG DỤNG (STATE & LOCALSTORAGE)
     // =========================================================================
-    const STORAGE_KEY = 'khtn9_bai18_vlab_state_v6';
+    const STORAGE_KEY = 'khtn9_bai18_vlab_state_v7';
 
     const DEFAULT_STATE = {
       currentStep: 0,
@@ -1227,7 +1268,7 @@
         metalsShelf.appendChild(card);
       });
 
-      // Render Indicator Shelf (Phenolphthalein for H2O)
+      // Render Indicator Shelf
       const indWrapper = document.getElementById('shelf-indicator-wrapper');
       const indShelf = document.getElementById('shelf-indicators');
       if (currentExp.needsIndicator) {
@@ -1254,9 +1295,9 @@
 
       // Sync Alcohol Lamp UI
       document.getElementById('alcohol-lamp-toggle').checked = benchState.isHeated;
-      document.getElementById('shelf-lamp-svg').innerHTML = getAlcoholLampSVG(benchState.isHeated, 'w-11 h-14');
+      document.getElementById('shelf-lamp-svg').innerHTML = getAlcoholLampSVG(benchState.isHeated, 'w-14 h-12');
 
-      // Load saved observations (2 questions)
+      // Load saved observations
       const obs = appState.observations[currentExp.id];
       document.getElementById('obs-field-1').value = obs.external || '';
       document.getElementById('obs-field-2').value = obs.microChange || '';
@@ -1339,7 +1380,6 @@
       saveState();
       renderLabWorkspace();
 
-      // Tự động chạy thí nghiệm ngay khi thả kim loại vào dụng cụ hoặc nhỏ thuốc thử khi đã có kim loại
       if (benchState.vesselId && benchState.metalSymbol) {
         triggerAutoReaction();
       }
@@ -1347,7 +1387,7 @@
 
     function toggleAlcoholLamp(checked) {
       benchState.isHeated = checked;
-      document.getElementById('shelf-lamp-svg').innerHTML = getAlcoholLampSVG(benchState.isHeated, 'w-11 h-14');
+      document.getElementById('shelf-lamp-svg').innerHTML = getAlcoholLampSVG(benchState.isHeated, 'w-14 h-12');
       saveState();
       if (benchState.vesselId && benchState.metalSymbol) {
         triggerAutoReaction();
@@ -1365,7 +1405,6 @@
       updateMicroPlayIcon();
       saveState();
 
-      // Ghi nhận phép thử vào nhật ký
       const currentExp = EXPERIMENT_GROUPS[activeLabGroupIndex];
       const vesselObj = currentExp.vessels.find(v => v.id === benchState.vesselId);
       const label = `${benchState.metalSymbol} + ${vesselObj ? vesselObj.formula : ''}${benchState.isHeated ? ' (đun nóng)' : ' (thường)'}`;
@@ -1430,7 +1469,7 @@
     }
 
     // =========================================================================
-    // LOGIC ĐÁNH GIÁ PHẢN ỨNG HÓA HỌC CHÍNH XÁC (SGK KHTN 9)
+    // LOGIC ĐÁNH GIÁ PHẢN ỨNG HÓA HỌC CHÍNH XÁC (BAO GỒM Mg, Al, Zn, Fe, Cu, Au)
     // =========================================================================
     function evaluateReaction(vesselId, metal, isHeated) {
       // 1. Tác dụng với O2
@@ -1444,6 +1483,17 @@
             solidEndColor: '#f8fafc', // MgO bột trắng
             gasConsume: true,
             microKey: 'mg_o2'
+          };
+        }
+        if (metal === 'Al') {
+          return {
+            reacts: isHeated,
+            type: 'o2_al',
+            flameColor: '#fef08a',
+            glowColor: 'rgba(254, 249, 195, 0.92)',
+            solidEndColor: '#f8fafc', // Al2O3 bột trắng
+            gasConsume: true,
+            microKey: 'al_o2'
           };
         }
         if (metal === 'Fe') {
@@ -1467,6 +1517,9 @@
             microKey: 'cu_o2'
           };
         }
+        if (metal === 'Au') {
+          return { reacts: false, type: 'none', microKey: 'no_reaction_noble' };
+        }
       }
 
       // 2. Tác dụng với Cl2
@@ -1479,6 +1532,16 @@
             solidEndColor: '#ffffff', // NaCl trắng
             gasFade: true,
             microKey: 'na_cl2'
+          };
+        }
+        if (metal === 'Al') {
+          return {
+            reacts: isHeated,
+            type: 'cl2_al',
+            flameColor: '#fde047',
+            solidEndColor: '#f8fafc', // AlCl3 trắng
+            gasFade: true,
+            microKey: 'al_cl2'
           };
         }
         if (metal === 'Fe') {
@@ -1502,9 +1565,12 @@
             microKey: 'cu_cl2'
           };
         }
+        if (metal === 'Au') {
+          return { reacts: false, type: 'none', microKey: 'no_reaction_noble' };
+        }
       }
 
-      // 3. Tác dụng với H2O
+      // 3. Tác dụng với H2O (đã loại bỏ Mg; gồm Na, Al, Fe, Cu, Au)
       if (vesselId === 'beaker_h2o') {
         if (metal === 'Na') {
           return {
@@ -1512,29 +1578,21 @@
             type: 'h2o_na',
             skatingNa: true,
             bubbles: 'fast',
-            solutionEndColor: 'rgba(236, 72, 153, 0.55)', // Hồng với phenolphthalein
+            solutionEndColor: 'rgba(236, 72, 153, 0.55)',
             microKey: 'na_h2o'
           };
         }
-        if (metal === 'Mg') {
-          return {
-            reacts: isHeated, // Mg phản ứng chậm ở nước thường, phản ứng rõ khi đun nóng
-            type: 'h2o_mg',
-            bubbles: 'slow',
-            solutionEndColor: 'rgba(244, 114, 182, 0.28)',
-            microKey: 'mg_h2o'
-          };
-        }
-        if (metal === 'Cu') {
+        // Al có màng oxide bền bảo vệ; Fe, Cu, Au không tác dụng với nước lỏng
+        if (metal === 'Al' || metal === 'Fe' || metal === 'Cu' || metal === 'Au') {
           return {
             reacts: false,
             type: 'none',
-            microKey: 'no_reaction_cu_h2o'
+            microKey: 'no_reaction_h2o'
           };
         }
       }
 
-      // 4. Tác dụng với dd HCl loãng
+      // 4. Tác dụng với dd HCl loãng (đã loại bỏ Zn; gồm Mg, Al, Fe, Cu, Au)
       if (vesselId === 'tube_hcl') {
         if (metal === 'Mg') {
           return {
@@ -1546,14 +1604,14 @@
             microKey: 'mg_hcl'
           };
         }
-        if (metal === 'Zn') {
+        if (metal === 'Al') {
           return {
             reacts: true,
-            type: 'hcl_zn',
-            bubbles: 'medium',
+            type: 'hcl_al',
+            bubbles: 'fast',
             dissolveMetal: true,
             solutionEndColor: 'rgba(226, 232, 240, 0.45)',
-            microKey: 'zn_hcl'
+            microKey: 'al_hcl'
           };
         }
         if (metal === 'Fe') {
@@ -1566,24 +1624,34 @@
             microKey: 'fe_hcl'
           };
         }
-        if (metal === 'Cu') {
+        if (metal === 'Cu' || metal === 'Au') {
           return {
             reacts: false,
             type: 'none',
-            microKey: 'no_reaction_cu_hcl'
+            microKey: 'no_reaction_hcl'
           };
         }
       }
 
-      // 5. Tác dụng với dung dịch muối
+      // 5. Tác dụng với dung dịch muối (Al, Zn, Fe, Cu, Au)
       if (vesselId === 'tube_cuso4') {
+        if (metal === 'Al') {
+          return {
+            reacts: true,
+            type: 'salt_al_cuso4',
+            coatingColor: '#ea580c',
+            solutionStartColor: 'rgba(37, 99, 235, 0.45)',
+            solutionEndColor: 'rgba(226, 232, 240, 0.4)',
+            microKey: 'al_cuso4'
+          };
+        }
         if (metal === 'Fe') {
           return {
             reacts: true,
             type: 'salt_fe_cuso4',
-            coatingColor: '#ea580c', // Đồng đỏ cam bám lên đinh sắt
+            coatingColor: '#ea580c',
             solutionStartColor: 'rgba(37, 99, 235, 0.45)',
-            solutionEndColor: 'rgba(134, 239, 172, 0.38)', // Nhạt dần sang xanh lục nhạt FeSO4
+            solutionEndColor: 'rgba(134, 239, 172, 0.38)',
             microKey: 'fe_cuso4'
           };
         }
@@ -1593,11 +1661,11 @@
             type: 'salt_zn_cuso4',
             coatingColor: '#ea580c',
             solutionStartColor: 'rgba(37, 99, 235, 0.45)',
-            solutionEndColor: 'rgba(226, 232, 240, 0.4)', // Mất màu xanh sang không màu ZnSO4
+            solutionEndColor: 'rgba(226, 232, 240, 0.4)',
             microKey: 'zn_cuso4'
           };
         }
-        if (metal === 'Cu') {
+        if (metal === 'Cu' || metal === 'Au') {
           return { reacts: false, type: 'none', microKey: 'no_reaction_salt' };
         }
       }
@@ -1607,36 +1675,49 @@
           return {
             reacts: true,
             type: 'salt_cu_agno3',
-            coatingColor: '#e2e8f0', // Bạc trắng xám bám lên dây đồng
+            coatingColor: '#e2e8f0',
             solutionStartColor: 'rgba(226, 232, 240, 0.4)',
-            solutionEndColor: 'rgba(37, 99, 235, 0.45)', // Chuyển dần sang xanh lam Cu(NO3)2
+            solutionEndColor: 'rgba(37, 99, 235, 0.45)',
             microKey: 'cu_agno3'
           };
         }
-        if (metal === 'Fe' || metal === 'Zn') {
+        if (metal === 'Al' || metal === 'Fe' || metal === 'Zn') {
           return {
             reacts: true,
             type: 'salt_metal_agno3',
             coatingColor: '#e2e8f0',
             solutionStartColor: 'rgba(226, 232, 240, 0.4)',
             solutionEndColor: metal === 'Fe' ? 'rgba(134, 239, 172, 0.35)' : 'rgba(226, 232, 240, 0.45)',
-            microKey: 'zn_agno3'
+            microKey: metal === 'Al' ? 'al_agno3' : 'zn_agno3'
           };
+        }
+        if (metal === 'Au') {
+          return { reacts: false, type: 'none', microKey: 'no_reaction_salt' };
         }
       }
 
       if (vesselId === 'tube_feso4') {
+        if (metal === 'Al') {
+          return {
+            reacts: true,
+            type: 'salt_al_feso4',
+            coatingColor: '#475569',
+            solutionStartColor: 'rgba(74, 222, 128, 0.3)',
+            solutionEndColor: 'rgba(226, 232, 240, 0.42)',
+            microKey: 'al_feso4'
+          };
+        }
         if (metal === 'Zn') {
           return {
             reacts: true,
             type: 'salt_zn_feso4',
-            coatingColor: '#475569', // Sắt xám đen bám lên kẽm
+            coatingColor: '#475569',
             solutionStartColor: 'rgba(74, 222, 128, 0.3)',
             solutionEndColor: 'rgba(226, 232, 240, 0.42)',
             microKey: 'zn_feso4'
           };
         }
-        if (metal === 'Cu' || metal === 'Fe') {
+        if (metal === 'Cu' || metal === 'Fe' || metal === 'Au') {
           return { reacts: false, type: 'none', microKey: 'no_reaction_salt' };
         }
       }
@@ -1695,7 +1776,7 @@
     }
 
     // =========================================================================
-    // 8. CANVAS ANIMATION ENGINE (VĨ MÔ CHẬM RÃI & VI MÔ ĐÚNG LIÊN KẾT SẢN PHẨM)
+    // 8. CANVAS ANIMATION ENGINE (VĨ MÔ & VI MÔ ĐÚNG LIÊN KẾT SẢN PHẨM)
     // =========================================================================
     let macroCanvas, macroCtx, microCanvas, microCtx;
     let lastTimestamp = 0;
@@ -1769,7 +1850,6 @@
 
       if (appState.currentStep === 2) {
         if (benchState.isRunning && benchState.reactionData && benchState.isPlaying) {
-          // ~14 giây cho toàn bộ quá trình để học sinh quan sát rõ từng biến đổi
           benchState.progress = Math.min(100, benchState.progress + dt * 7.1 * benchState.speedMultiplier);
           document.getElementById('micro-scrubber').value = Math.floor(benchState.progress);
           if (benchState.progress >= 100) {
@@ -1798,7 +1878,7 @@
     }
 
     // -------------------------------------------------------------------------
-    // VẼ CẢNH THÍ NGHIỆM VĨ MÔ (DỤNG CỤ, HÓA CHẤT, HIỆN TƯỢNG RÕ RÀNG)
+    // VẼ CẢNH THÍ NGHIỆM VĨ MÔ (DỤNG CỤ, HÓA CHẤT, ĐÈN CỒN BO TRÒN MỀM MẠI)
     // -------------------------------------------------------------------------
     function drawMacroScene(timeSec) {
       if (!macroCtx || !macroCanvas) return;
@@ -1831,14 +1911,13 @@
       const p = benchState.isRunning ? benchState.progress / 100 : 0;
       const rx = benchState.reactionData;
 
-      // Vẽ ngọn lửa đèn cồn dưới đáy bình nếu bật đèn cồn
+      // Vẽ đèn cồn bo tròn mềm mại dưới giá đun nếu bật đèn cồn
       if (benchState.isHeated) {
-        drawLampFlameUnderVessel(macroCtx, cx, baseY - 4, timeSec);
+        drawLampFlameUnderVessel(macroCtx, cx, baseY - 2, timeSec);
       }
 
-      const vesselBottomY = benchState.isHeated ? baseY - 48 : baseY - 4;
+      const vesselBottomY = benchState.isHeated ? baseY - 62 : baseY - 4;
 
-      // Vẽ dụng cụ thủy tinh (Bình khí / Cốc / Ống nghiệm)
       if (vessel.id.startsWith('jar_')) {
         drawGasJar(macroCtx, cx, vesselBottomY, vessel, p, rx, timeSec);
       } else if (vessel.id === 'beaker_h2o') {
@@ -1847,7 +1926,6 @@
         drawTestTube(macroCtx, cx, vesselBottomY, vessel, p, rx, timeSec);
       }
 
-      // Nhãn trạng thái phản ứng ở góc trên
       if (benchState.isRunning && rx) {
         macroCtx.textAlign = 'center';
         if (!rx.reacts) {
@@ -1862,45 +1940,137 @@
       }
     }
 
+    // Đèn cồn bo tròn mềm mại giống hình ảnh cung cấp đặt dưới giá đun
     function drawLampFlameUnderVessel(ctx, cx, baseY, timeSec) {
-      // Đế và bầu đèn cồn nhỏ đặt dưới giá đun
+      ctx.save();
+      // Giá đỡ kiềng đun
       ctx.fillStyle = '#94a3b8';
-      ctx.fillRect(cx - 42, baseY - 44, 84, 4);
-      ctx.fillRect(cx - 38, baseY - 44, 3, 44);
-      ctx.fillRect(cx + 35, baseY - 44, 3, 44);
+      ctx.fillRect(cx - 44, baseY - 60, 88, 3.5);
+      ctx.fillRect(cx - 40, baseY - 60, 3, 60);
+      ctx.fillRect(cx + 37, baseY - 60, 3, 60);
 
-      // Bầu đèn cồn
-      ctx.fillStyle = 'rgba(186, 230, 253, 0.7)';
-      ctx.strokeStyle = '#0284c7';
-      ctx.lineWidth = 1.5;
+      ctx.translate(cx, baseY);
+
+      // 1. Bầu thủy tinh bo cong tròn mềm mại
       ctx.beginPath();
-      ctx.roundRect(cx - 16, baseY - 22, 32, 22, 6);
+      ctx.moveTo(-11, -34);
+      ctx.bezierCurveTo(-22, -31, -25, -20, -21, -9);
+      ctx.bezierCurveTo(-18, -1.5, -11, 0, 0, 0);
+      ctx.bezierCurveTo(11, 0, 18, -1.5, 21, -9);
+      ctx.bezierCurveTo(25, -20, 22, -31, 11, -34);
+      ctx.closePath();
+      ctx.fillStyle = '#f8fafc';
       ctx.fill();
+      ctx.lineWidth = 1.8;
+      ctx.strokeStyle = '#94a3b8';
       ctx.stroke();
 
-      // Ngọn lửa
-      const sway = Math.sin(timeSec * 12) * 2;
-      ctx.fillStyle = '#f97316';
+      // 2. Mực cồn xanh dương nhạt bên trong
+      ctx.save();
+      ctx.clip();
+      ctx.fillStyle = 'rgba(125, 211, 252, 0.72)';
+      ctx.fillRect(-26, -17, 52, 19);
       ctx.beginPath();
-      ctx.moveTo(cx, baseY - 43);
-      ctx.quadraticCurveTo(cx - 8 + sway, baseY - 31, cx, baseY - 24);
-      ctx.quadraticCurveTo(cx + 8 + sway, baseY - 31, cx, baseY - 43);
+      ctx.ellipse(0, -17, 20, 3, 0, 0, Math.PI * 2);
+      ctx.fillStyle = '#bae6fd';
+      ctx.fill();
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Bọt khí nhỏ trong cồn
+      ctx.fillStyle = '#e0f2fe';
+      ctx.strokeStyle = '#0284c7';
+      ctx.lineWidth = 0.9;
+      [[-8, -22, 2], [8, -21, 2.3], [-4, -10, 1.5]].forEach(([bx, by, br]) => {
+        ctx.beginPath();
+        ctx.arc(bx, by, br, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      });
+
+      // Sợi bấc bện uốn cong mềm mại
+      ctx.beginPath();
+      ctx.moveTo(0, -40);
+      ctx.bezierCurveTo(0, -28, -9, -22, -7, -12);
+      ctx.bezierCurveTo(-5, -7, 2, -6, 6, -5);
+      ctx.strokeStyle = '#78350f';
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = 'round';
+      ctx.setLineDash([2.5, 1.5]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
+
+      // Ánh phản quang trên bầu thủy tinh
+      ctx.beginPath();
+      ctx.moveTo(-16, -27);
+      ctx.bezierCurveTo(-19, -21, -19, -14, -16, -8);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+
+      // 3. Cổ chụp kim loại bo tròn
+      ctx.beginPath();
+      ctx.roundRect(-8, -42, 16, 9, [5, 5, 2, 2]);
+      ctx.fillStyle = '#cbd5e1';
+      ctx.fill();
+      ctx.strokeStyle = '#64748b';
+      ctx.lineWidth = 1.4;
+      ctx.stroke();
+
+      // 4. Ngọn lửa 3 lớp (đỏ - cam - vàng) uốn lượn
+      const sway = Math.sin(timeSec * 12) * 2;
+      ctx.beginPath();
+      ctx.moveTo(0, -42);
+      ctx.bezierCurveTo(-9, -43, -10, -51, -5, -57);
+      ctx.bezierCurveTo(-2, -61, 0, -63, 1 + sway, -65);
+      ctx.bezierCurveTo(2, -61, 5.5, -59, 8, -55);
+      ctx.bezierCurveTo(10, -49, 8, -43, 0, -42);
+      ctx.fillStyle = '#dc2626';
       ctx.fill();
 
-      ctx.fillStyle = '#facc15';
       ctx.beginPath();
-      ctx.moveTo(cx, baseY - 39);
-      ctx.quadraticCurveTo(cx - 4 + sway * 0.5, baseY - 31, cx, baseY - 25);
-      ctx.quadraticCurveTo(cx + 4 + sway * 0.5, baseY - 31, cx, baseY - 39);
+      ctx.moveTo(0, -42);
+      ctx.bezierCurveTo(-5.5, -43, -6.5, -49, -3, -53);
+      ctx.bezierCurveTo(-1.5, -56, 0, -58, 0.5 + sway * 0.6, -59);
+      ctx.bezierCurveTo(1.5, -56, 4, -54, 5, -51);
+      ctx.bezierCurveTo(6.5, -47, 5, -43, 0, -42);
+      ctx.fillStyle = '#f97316';
       ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(0, -42);
+      ctx.bezierCurveTo(-3, -43, -3.5, -47, -1.5, -50);
+      ctx.bezierCurveTo(-0.8, -51.5, 0, -53, sway * 0.3, -53.5);
+      ctx.bezierCurveTo(1, -51.5, 2.5, -50, 3, -47.5);
+      ctx.bezierCurveTo(3.5, -45, 2.5, -43, 0, -42);
+      ctx.fillStyle = '#fef08a';
+      ctx.fill();
+
+      // Nắp đậy thủy tinh bo tròn đặt bên cạnh
+      ctx.beginPath();
+      ctx.moveTo(26, 0);
+      ctx.lineTo(27.5, -13);
+      ctx.bezierCurveTo(28, -17, 30.5, -18.5, 34.5, -18.5);
+      ctx.bezierCurveTo(38.5, -18.5, 41, -17, 41.5, -13);
+      ctx.lineTo(43, 0);
+      ctx.closePath();
+      ctx.fillStyle = '#e2e8f0';
+      ctx.fill();
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 1.4;
+      ctx.stroke();
+
+      ctx.restore();
     }
 
     function drawGasJar(ctx, cx, bottomY, vessel, p, rx, timeSec) {
       const jarW = 116;
-      const jarH = 185;
+      const jarH = 180;
       const topY = bottomY - jarH;
 
-      // Khí bên trong bình
       let gasAlpha = vessel.id === 'jar_cl2' ? 0.34 : 0.16;
       if (rx && rx.reacts && rx.gasFade) {
         gasAlpha = Math.max(0.03, 0.34 * (1 - p));
@@ -1912,7 +2082,6 @@
       ctx.roundRect(cx - jarW / 2 + 3, topY + 14, jarW - 6, jarH - 17, 10);
       ctx.fill();
 
-      // Khói nâu đỏ FeCl3 CHỈ xuất hiện khi đốt Fe trong Cl2
       if (rx && rx.reacts && rx.brownSmoke && p > 0.08) {
         const smokeAlpha = Math.min(0.65, p * 0.75);
         ctx.fillStyle = `rgba(154, 52, 18, ${smokeAlpha})`;
@@ -1921,14 +2090,12 @@
         ctx.fill();
       }
 
-      // Thân bình thủy tinh
       ctx.strokeStyle = '#64748b';
       ctx.lineWidth = 2.5;
       ctx.beginPath();
       ctx.roundRect(cx - jarW / 2, topY + 12, jarW, jarH - 12, 12);
       ctx.stroke();
 
-      // Nút bình
       ctx.fillStyle = '#cbd5e1';
       ctx.strokeStyle = '#475569';
       ctx.lineWidth = 1.8;
@@ -1937,25 +2104,22 @@
       ctx.fill();
       ctx.stroke();
 
-      // Nhãn bình khí
       ctx.fillStyle = '#334155';
       ctx.font = '700 12px "JetBrains Mono", monospace';
       ctx.textAlign = 'center';
       ctx.fillText(vessel.formula, cx, bottomY - 12);
 
-      // Muôi sắt đưa kim loại vào bình
       if (benchState.metalSymbol) {
         ctx.strokeStyle = '#475569';
         ctx.lineWidth = 2.5;
         ctx.beginPath();
         ctx.moveTo(cx, topY + 14);
-        ctx.lineTo(cx, topY + 108);
+        ctx.lineTo(cx, topY + 105);
         ctx.stroke();
 
-        const sampleY = topY + 112;
+        const sampleY = topY + 109;
         drawMetalSampleInVessel(ctx, cx, sampleY, benchState.metalSymbol, p, rx, timeSec);
 
-        // Hiệu ứng cháy sáng / tia lửa
         if (rx && rx.reacts && p > 0.05 && p < 0.92) {
           if (rx.glowColor) {
             const rad = 28 + Math.sin(timeSec * 20) * 6;
@@ -1990,11 +2154,10 @@
 
     function drawBeaker(ctx, cx, bottomY, vessel, p, rx, timeSec) {
       const bw = 136;
-      const bh = 165;
+      const bh = 160;
       const topY = bottomY - bh;
-      const liqTop = topY + 52;
+      const liqTop = topY + 50;
 
-      // Màu dung dịch
       let liqColor = vessel.liquidColor;
       if (benchState.hasPhenolphthalein && rx && rx.reacts && rx.solutionEndColor) {
         liqColor = lerpColor(vessel.liquidColor, rx.solutionEndColor, Math.min(1, p * 1.4));
@@ -2005,7 +2168,6 @@
       ctx.roundRect(cx - bw / 2 + 3, liqTop, bw - 6, bottomY - liqTop - 3, [0, 0, 10, 10]);
       ctx.fill();
 
-      // Thân cốc thủy tinh
       ctx.strokeStyle = '#64748b';
       ctx.lineWidth = 2.5;
       ctx.beginPath();
@@ -2017,10 +2179,8 @@
       ctx.lineTo(cx + bw / 2 + 4, topY);
       ctx.stroke();
 
-      // Mẫu kim loại
       if (benchState.metalSymbol) {
         if (benchState.metalSymbol === 'Na' && rx && rx.reacts) {
-          // Viên Na nổi trên mặt nước và chạy qua lại quanh bề mặt nước
           const skateX = cx + Math.sin(timeSec * 4.5) * (bw * 0.32) * (1 - p * 0.3);
           const scale = Math.max(0.15, 1 - p * 0.85);
           ctx.save();
@@ -2029,7 +2189,6 @@
           drawMetalSampleInVessel(ctx, 0, 0, 'Na', p, rx, timeSec);
           ctx.restore();
 
-          // Bọt khí H2 thoát ra quanh viên Na
           if (p < 0.96) {
             for (let i = 0; i < 10; i++) {
               const bx = skateX + Math.sin(timeSec * 9 + i) * 14;
@@ -2042,7 +2201,6 @@
             }
           }
         } else {
-          // Kim loại chìm ở đáy cốc
           const metalY = bottomY - 16;
           drawMetalSampleInVessel(ctx, cx, metalY, benchState.metalSymbol, p, rx, timeSec);
           if (rx && rx.reacts && rx.bubbles && p < 0.96) {
@@ -2054,9 +2212,9 @@
 
     function drawTestTube(ctx, cx, bottomY, vessel, p, rx, timeSec) {
       const tw = 56;
-      const th = 195;
+      const th = 190;
       const topY = bottomY - th;
-      const liqTop = topY + 64;
+      const liqTop = topY + 62;
 
       let liqColor = vessel.liquidColor;
       if (rx && rx.reacts && rx.solutionEndColor) {
@@ -2064,7 +2222,6 @@
         liqColor = lerpColor(startC, rx.solutionEndColor, p);
       }
 
-      // Dung dịch trong ống nghiệm
       ctx.fillStyle = liqColor;
       ctx.beginPath();
       ctx.moveTo(cx - tw / 2 + 2, liqTop);
@@ -2074,7 +2231,6 @@
       ctx.closePath();
       ctx.fill();
 
-      // Thành ống nghiệm
       ctx.strokeStyle = '#64748b';
       ctx.lineWidth = 2.5;
       ctx.beginPath();
@@ -2084,7 +2240,6 @@
       ctx.lineTo(cx + tw / 2 + 3, topY);
       ctx.stroke();
 
-      // Kim loại trong ống nghiệm
       if (benchState.metalSymbol) {
         const metalY = bottomY - 22;
         drawMetalSampleInVessel(ctx, cx, metalY, benchState.metalSymbol, p, rx, timeSec);
@@ -2126,6 +2281,21 @@
         ctx.moveTo(-14, 6);
         ctx.bezierCurveTo(-6, -12, 6, 12, 14, -6);
         ctx.stroke();
+      } else if (symbol === 'Al') {
+        ctx.rotate(-0.2);
+        ctx.fillStyle = fillColor;
+        ctx.strokeStyle = '#4b5563';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(-15, -8, 30, 16, 3);
+        ctx.fill();
+        ctx.stroke();
+        if (rx && rx.reacts && rx.coatingColor && p > 0.05) {
+          ctx.fillStyle = rx.coatingColor;
+          ctx.globalAlpha = Math.min(0.95, p * 1.15);
+          ctx.fillRect(-14, -7, 28 * Math.min(1, p * 1.2), 14);
+          ctx.globalAlpha = 1;
+        }
       } else if (symbol === 'Zn') {
         ctx.fillStyle = fillColor;
         ctx.strokeStyle = '#334155';
@@ -2137,7 +2307,6 @@
           ctx.stroke();
         });
       } else if (symbol === 'Fe') {
-        // Đinh sắt nghiêng trong ống nghiệm/bình
         ctx.rotate(-0.35);
         ctx.fillStyle = fillColor;
         ctx.strokeStyle = '#1e293b';
@@ -2146,7 +2315,6 @@
         ctx.strokeRect(-16, -3, 28, 6);
         ctx.fillRect(-19, -6, 4, 12);
 
-        // Lớp kim loại mới bám từ từ lên bề mặt đinh sắt
         if (rx && rx.reacts && rx.coatingColor && p > 0.05) {
           ctx.fillStyle = rx.coatingColor;
           ctx.globalAlpha = Math.min(0.95, p * 1.15);
@@ -2154,7 +2322,6 @@
           ctx.globalAlpha = 1;
         }
       } else if (symbol === 'Cu') {
-        // Cuộn dây đồng xoắn
         ctx.strokeStyle = fillColor;
         ctx.lineWidth = 3.5;
         for (let i = -1; i <= 1; i++) {
@@ -2162,7 +2329,6 @@
           ctx.ellipse(0, i * 6, 12, 4, 0, 0, Math.PI * 2);
           ctx.stroke();
         }
-        // Lớp bạc bám từ từ lên dây đồng khi nhúng vào AgNO3
         if (rx && rx.reacts && rx.coatingColor && p > 0.05) {
           ctx.strokeStyle = rx.coatingColor;
           ctx.lineWidth = 4;
@@ -2174,6 +2340,18 @@
           }
           ctx.globalAlpha = 1;
         }
+      } else if (symbol === 'Au') {
+        ctx.fillStyle = fillColor;
+        ctx.strokeStyle = '#a16207';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(-12, -7);
+        ctx.lineTo(12, -7);
+        ctx.lineTo(16, 8);
+        ctx.lineTo(-16, 8);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
       }
 
       ctx.restore();
@@ -2207,8 +2385,8 @@
     }
 
     // -------------------------------------------------------------------------
-    // VẼ CẢNH VI MÔ (KHÔNG PHƯƠNG TRÌNH SẴN, KHÔNG VĂN BẢN GIẢI THÍCH SẴN,
-    // NGUYÊN TỬ KIM LOẠI ĐỨNG ĐỘC LẬP BAN ĐẦU, NÉT ĐỨT LIÊN KẾT ĐÚNG CTHH SẢN PHẨM)
+    // VẼ CẢNH VI MÔ (NGUYÊN TỬ KIM LOẠI ĐỨNG ĐỘC LẬP BAN ĐẦU,
+    // NÉT ĐỨT LIÊN KẾT ĐÚNG CÔNG THỨC HÓA HỌC SẢN PHẨM)
     // -------------------------------------------------------------------------
     function drawAtom(ctx, x, y, r, label, fill, textColor = '#ffffff') {
       ctx.fillStyle = fill;
@@ -2267,14 +2445,13 @@
 
       const key = rx ? rx.microKey : 'none';
 
-      // 1. Mg + O2 -> MgO (2Mg + O2 -> 2MgO: mỗi Mg liên kết nét đứt với 1 O)
+      // 1. Mg + O2 -> MgO
       if (key === 'mg_o2') {
         const mg1 = [lerp(w * 0.24, w * 0.38, moveT), lerp(h * 0.32, h * 0.34, moveT) + vib];
         const mg2 = [lerp(w * 0.24, w * 0.38, moveT), lerp(h * 0.68, h * 0.66, moveT) - vib];
         const o1 = [lerp(w * 0.72, w * 0.58, moveT), lerp(h * 0.43, h * 0.34, moveT) - vib];
         const o2 = [lerp(w * 0.72, w * 0.58, moveT), lerp(h * 0.57, h * 0.66, moveT) + vib];
 
-        // Liên kết O---O ban đầu đứt gãy; liên kết Mg---O hình thành
         drawDashedBond(microCtx, o1[0], o1[1], o2[0], o2[1], '#f87171', breakAlpha);
         drawDashedBond(microCtx, mg1[0], mg1[1], o1[0], o1[1], '#34d399', formAlpha);
         drawDashedBond(microCtx, mg2[0], mg2[1], o2[0], o2[1], '#34d399', formAlpha);
@@ -2286,24 +2463,39 @@
         return;
       }
 
-      // 2. Fe + O2 -> Fe3O4 (3Fe + 2O2 -> Fe3O4: 3 nguyên tử Fe liên kết nét đứt với 4 nguyên tử O)
+      // 2. Al + O2 -> Al2O3 (2 Al liên kết nét đứt với 3 O)
+      if (key === 'al_o2') {
+        const al1 = [lerp(w * 0.22, w * 0.40, moveT), lerp(h * 0.34, h * 0.36, moveT) + vib];
+        const al2 = [lerp(w * 0.22, w * 0.40, moveT), lerp(h * 0.66, h * 0.64, moveT) - vib];
+        const o1 = [lerp(w * 0.74, w * 0.60, moveT), lerp(h * 0.26, h * 0.24, moveT)];
+        const o2 = [lerp(w * 0.74, w * 0.62, moveT), lerp(h * 0.50, h * 0.50, moveT)];
+        const o3 = [lerp(w * 0.74, w * 0.60, moveT), lerp(h * 0.74, h * 0.76, moveT)];
+
+        drawDashedBond(microCtx, al1[0], al1[1], o1[0], o1[1], '#34d399', formAlpha);
+        drawDashedBond(microCtx, al1[0], al1[1], o2[0], o2[1], '#34d399', formAlpha);
+        drawDashedBond(microCtx, al2[0], al2[1], o2[0], o2[1], '#34d399', formAlpha);
+        drawDashedBond(microCtx, al2[0], al2[1], o3[0], o3[1], '#34d399', formAlpha);
+
+        drawAtom(microCtx, al1[0], al1[1], 17, 'Al', '#6b7280');
+        drawAtom(microCtx, al2[0], al2[1], 17, 'Al', '#6b7280');
+        [o1, o2, o3].forEach(pt => drawAtom(microCtx, pt[0], pt[1], 14, 'O', '#ef4444'));
+        return;
+      }
+
+      // 3. Fe + O2 -> Fe3O4 (3 nguyên tử Fe liên kết nét đứt với 4 nguyên tử O)
       if (key === 'fe_o2') {
-        // 3 nguyên tử Fe đứng độc lập ban đầu -> tiến vào trung tâm tạo cụm Fe3O4
         const fe1 = [lerp(w * 0.20, w * 0.42, moveT), lerp(h * 0.26, h * 0.36, moveT) + vib];
         const fe2 = [lerp(w * 0.20, w * 0.58, moveT), lerp(h * 0.50, h * 0.50, moveT) - vib];
         const fe3 = [lerp(w * 0.20, w * 0.42, moveT), lerp(h * 0.74, h * 0.64, moveT) + vib];
 
-        // 2 phân tử O2 (4 nguyên tử O)
         const o1 = [lerp(w * 0.76, w * 0.42, moveT), lerp(h * 0.24, h * 0.20, moveT)];
         const o2 = [lerp(w * 0.76, w * 0.58, moveT), lerp(h * 0.38, h * 0.32, moveT)];
         const o3 = [lerp(w * 0.76, w * 0.58, moveT), lerp(h * 0.62, h * 0.68, moveT)];
         const o4 = [lerp(w * 0.76, w * 0.42, moveT), lerp(h * 0.76, h * 0.80, moveT)];
 
-        // Liên kết O---O ban đầu
         drawDashedBond(microCtx, o1[0], o1[1], o2[0], o2[1], '#f87171', breakAlpha);
         drawDashedBond(microCtx, o3[0], o3[1], o4[0], o4[1], '#f87171', breakAlpha);
 
-        // Liên kết nét đứt Fe---O trong Fe3O4 (3 Fe nối với 4 O)
         drawDashedBond(microCtx, fe1[0], fe1[1], o1[0], o1[1], '#fbbf24', formAlpha);
         drawDashedBond(microCtx, fe1[0], fe1[1], o2[0], o2[1], '#fbbf24', formAlpha);
         drawDashedBond(microCtx, fe2[0], fe2[1], o2[0], o2[1], '#fbbf24', formAlpha);
@@ -2316,7 +2508,7 @@
         return;
       }
 
-      // 3. Cu + O2 -> CuO (2Cu + O2 -> 2CuO)
+      // 4. Cu + O2 -> CuO
       if (key === 'cu_o2') {
         const cu1 = [lerp(w * 0.24, w * 0.38, moveT), lerp(h * 0.32, h * 0.34, moveT) + vib];
         const cu2 = [lerp(w * 0.24, w * 0.38, moveT), lerp(h * 0.68, h * 0.66, moveT) - vib];
@@ -2334,7 +2526,7 @@
         return;
       }
 
-      // 4. Na + Cl2 -> NaCl (2Na + Cl2 -> 2NaCl: mỗi Na liên kết nét đứt với 1 Cl)
+      // 5. Na + Cl2 -> NaCl
       if (key === 'na_cl2') {
         const na1 = [lerp(w * 0.24, w * 0.38, moveT), lerp(h * 0.32, h * 0.34, moveT) + vib];
         const na2 = [lerp(w * 0.24, w * 0.38, moveT), lerp(h * 0.68, h * 0.66, moveT) - vib];
@@ -2352,25 +2544,27 @@
         return;
       }
 
-      // 5. Fe + Cl2 -> FeCl3 (1 Fe liên kết nét đứt với 3 Cl)
-      if (key === 'fe_cl2') {
-        const fe = [lerp(w * 0.24, w * 0.48, moveT), h * 0.50 + vib];
+      // 6. Al + Cl2 -> AlCl3 và Fe + Cl2 -> FeCl3 (1 nguyên tử kim loại liên kết nét đứt với 3 Cl)
+      if (key === 'al_cl2' || key === 'fe_cl2') {
+        const mSym = key === 'al_cl2' ? 'Al' : 'Fe';
+        const mCol = key === 'al_cl2' ? '#6b7280' : '#475569';
+        const mPos = [lerp(w * 0.24, w * 0.48, moveT), h * 0.50 + vib];
         const cl1 = [lerp(w * 0.72, w * 0.48, moveT), lerp(h * 0.24, h * 0.22, moveT)];
         const cl2 = [lerp(w * 0.72, w * 0.32, moveT), lerp(h * 0.50, h * 0.68, moveT)];
         const cl3 = [lerp(w * 0.72, w * 0.64, moveT), lerp(h * 0.76, h * 0.68, moveT)];
 
-        drawDashedBond(microCtx, fe[0], fe[1], cl1[0], cl1[1], '#fb923c', formAlpha);
-        drawDashedBond(microCtx, fe[0], fe[1], cl2[0], cl2[1], '#fb923c', formAlpha);
-        drawDashedBond(microCtx, fe[0], fe[1], cl3[0], cl3[1], '#fb923c', formAlpha);
+        drawDashedBond(microCtx, mPos[0], mPos[1], cl1[0], cl1[1], '#fb923c', formAlpha);
+        drawDashedBond(microCtx, mPos[0], mPos[1], cl2[0], cl2[1], '#fb923c', formAlpha);
+        drawDashedBond(microCtx, mPos[0], mPos[1], cl3[0], cl3[1], '#fb923c', formAlpha);
 
-        drawAtom(microCtx, fe[0], fe[1], 18, 'Fe', '#475569');
+        drawAtom(microCtx, mPos[0], mPos[1], 18, mSym, mCol);
         drawAtom(microCtx, cl1[0], cl1[1], 15, 'Cl', '#16a34a');
         drawAtom(microCtx, cl2[0], cl2[1], 15, 'Cl', '#16a34a');
         drawAtom(microCtx, cl3[0], cl3[1], 15, 'Cl', '#16a34a');
         return;
       }
 
-      // 6. Cu + Cl2 -> CuCl2 (1 Cu liên kết nét đứt với 2 Cl)
+      // 7. Cu + Cl2 -> CuCl2 (1 Cu liên kết nét đứt với 2 Cl)
       if (key === 'cu_cl2') {
         const cu = [lerp(w * 0.24, w * 0.48, moveT), h * 0.50 + vib];
         const cl1 = [lerp(w * 0.72, w * 0.32, moveT), lerp(h * 0.40, h * 0.50, moveT)];
@@ -2386,12 +2580,11 @@
         return;
       }
 
-      // 7. Na + H2O -> NaOH + H2 (2Na + 2H2O -> 2NaOH + H2: mỗi Na liên kết nét đứt với đúng 1 OH; 2 H tạo H---H)
+      // 8. Na + H2O -> NaOH + H2 (mỗi Na liên kết nét đứt với đúng 1 OH; 2 H tạo H---H)
       if (key === 'na_h2o') {
         const na1 = [lerp(w * 0.18, w * 0.28, moveT), lerp(h * 0.30, h * 0.28, moveT) + vib];
         const na2 = [lerp(w * 0.18, w * 0.28, moveT), lerp(h * 0.70, h * 0.72, moveT) - vib];
 
-        // 2 phân tử H2O: (O1 - H1a, H1b) và (O2 - H2a, H2b)
         const o1 = [lerp(w * 0.62, w * 0.46, moveT), lerp(h * 0.30, h * 0.28, moveT)];
         const h1a = [lerp(w * 0.76, w * 0.60, moveT), lerp(h * 0.22, h * 0.28, moveT)];
         const h1b = [lerp(w * 0.62, w * 0.78, moveT), lerp(h * 0.42, h * 0.42, moveT) - moveT * 10];
@@ -2400,15 +2593,11 @@
         const h2a = [lerp(w * 0.76, w * 0.60, moveT), lerp(h * 0.78, h * 0.72, moveT)];
         const h2b = [lerp(w * 0.62, w * 0.78, moveT), lerp(h * 0.58, h * 0.58, moveT) - moveT * 10];
 
-        // Liên kết O---H giữ lại trong OH
         drawDashedBond(microCtx, o1[0], o1[1], h1a[0], h1a[1], '#38bdf8', 1);
         drawDashedBond(microCtx, o2[0], o2[1], h2a[0], h2a[1], '#38bdf8', 1);
-
-        // Liên kết O---H bị phá vỡ
         drawDashedBond(microCtx, o1[0], o1[1], h1b[0], h1b[1], '#f87171', breakAlpha);
         drawDashedBond(microCtx, o2[0], o2[1], h2b[0], h2b[1], '#f87171', breakAlpha);
 
-        // Liên kết mới: mỗi Na liên kết nét đứt với 1 nhóm OH (Na---O---H) và H---H (H2)
         drawDashedBond(microCtx, na1[0], na1[1], o1[0], o1[1], '#fbbf24', formAlpha);
         drawDashedBond(microCtx, na2[0], na2[1], o2[0], o2[1], '#fbbf24', formAlpha);
         drawDashedBond(microCtx, h1b[0], h1b[1], h2b[0], h2b[1], '#34d399', formAlpha);
@@ -2421,37 +2610,34 @@
         return;
       }
 
-      // 8. Mg + H2O -> Mg(OH)2 + H2 (1 Mg liên kết nét đứt với 2 nhóm OH)
-      if (key === 'mg_h2o') {
-        const mg = [lerp(w * 0.20, w * 0.42, moveT), h * 0.50 + vib];
-        const o1 = [lerp(w * 0.62, w * 0.42, moveT), lerp(h * 0.30, h * 0.26, moveT)];
-        const h1a = [lerp(w * 0.76, w * 0.56, moveT), lerp(h * 0.22, h * 0.26, moveT)];
-        const h1b = [lerp(w * 0.62, w * 0.78, moveT), lerp(h * 0.42, h * 0.42, moveT)];
+      // 9. Al + HCl -> AlCl3 + H2 (1 Al liên kết nét đứt với 3 Cl; giải phóng H2)
+      if (key === 'al_hcl') {
+        const alPos = [lerp(w * 0.22, w * 0.44, moveT), h * 0.50 + vib];
+        const cl1 = [lerp(w * 0.62, w * 0.44, moveT), lerp(h * 0.24, h * 0.22, moveT)];
+        const cl2 = [lerp(w * 0.62, w * 0.28, moveT), lerp(h * 0.50, h * 0.68, moveT)];
+        const cl3 = [lerp(w * 0.62, w * 0.60, moveT), lerp(h * 0.76, h * 0.68, moveT)];
+        const h1 = [lerp(w * 0.78, w * 0.80, moveT), lerp(h * 0.34, h * 0.42, moveT)];
+        const h2 = [lerp(w * 0.78, w * 0.80, moveT), lerp(h * 0.66, h * 0.58, moveT)];
 
-        const o2 = [lerp(w * 0.62, w * 0.42, moveT), lerp(h * 0.70, h * 0.74, moveT)];
-        const h2a = [lerp(w * 0.76, w * 0.56, moveT), lerp(h * 0.78, h * 0.74, moveT)];
-        const h2b = [lerp(w * 0.62, w * 0.78, moveT), lerp(h * 0.58, h * 0.58, moveT)];
+        drawDashedBond(microCtx, cl1[0], cl1[1], h1[0], h1[1], '#f87171', breakAlpha);
+        drawDashedBond(microCtx, cl3[0], cl3[1], h2[0], h2[1], '#f87171', breakAlpha);
 
-        drawDashedBond(microCtx, o1[0], o1[1], h1a[0], h1a[1], '#38bdf8', 1);
-        drawDashedBond(microCtx, o2[0], o2[1], h2a[0], h2a[1], '#38bdf8', 1);
-        drawDashedBond(microCtx, o1[0], o1[1], h1b[0], h1b[1], '#f87171', breakAlpha);
-        drawDashedBond(microCtx, o2[0], o2[1], h2b[0], h2b[1], '#f87171', breakAlpha);
+        drawDashedBond(microCtx, alPos[0], alPos[1], cl1[0], cl1[1], '#fbbf24', formAlpha);
+        drawDashedBond(microCtx, alPos[0], alPos[1], cl2[0], cl2[1], '#fbbf24', formAlpha);
+        drawDashedBond(microCtx, alPos[0], alPos[1], cl3[0], cl3[1], '#fbbf24', formAlpha);
+        drawDashedBond(microCtx, h1[0], h1[1], h2[0], h2[1], '#34d399', formAlpha);
 
-        drawDashedBond(microCtx, mg[0], mg[1], o1[0], o1[1], '#fbbf24', formAlpha);
-        drawDashedBond(microCtx, mg[0], mg[1], o2[0], o2[1], '#fbbf24', formAlpha);
-        drawDashedBond(microCtx, h1b[0], h1b[1], h2b[0], h2b[1], '#34d399', formAlpha);
-
-        drawAtom(microCtx, mg[0], mg[1], 17, 'Mg', '#64748b');
-        drawAtom(microCtx, o1[0], o1[1], 14, 'O', '#ef4444');
-        drawAtom(microCtx, o2[0], o2[1], 14, 'O', '#ef4444');
-        [h1a, h1b, h2a, h2b].forEach(pt => drawAtom(microCtx, pt[0], pt[1], 11, 'H', '#0ea5e9'));
+        drawAtom(microCtx, alPos[0], alPos[1], 17, 'Al', '#6b7280');
+        [cl1, cl2, cl3].forEach(pt => drawAtom(microCtx, pt[0], pt[1], 14, 'Cl', '#16a34a'));
+        drawAtom(microCtx, h1[0], h1[1], 11, 'H', '#0ea5e9');
+        drawAtom(microCtx, h2[0], h2[1], 11, 'H', '#0ea5e9');
         return;
       }
 
-      // 9. Mg/Zn/Fe + HCl -> MCl2 + H2 (1 kim loại liên kết nét đứt với 2 Cl; 2 H tạo H---H)
-      if (key === 'mg_hcl' || key === 'zn_hcl' || key === 'fe_hcl') {
-        const sym = key === 'mg_hcl' ? 'Mg' : key === 'zn_hcl' ? 'Zn' : 'Fe';
-        const col = sym === 'Mg' ? '#64748b' : sym === 'Zn' ? '#475569' : '#334155';
+      // 10. Mg/Fe + HCl -> MCl2 + H2 (1 kim loại liên kết nét đứt với 2 Cl; 2 H tạo H---H)
+      if (key === 'mg_hcl' || key === 'fe_hcl') {
+        const sym = key === 'mg_hcl' ? 'Mg' : 'Fe';
+        const col = sym === 'Mg' ? '#64748b' : '#334155';
 
         const mPos = [lerp(w * 0.22, w * 0.42, moveT), h * 0.50 + vib];
         const cl1 = [lerp(w * 0.62, w * 0.42, moveT), lerp(h * 0.32, h * 0.26, moveT)];
@@ -2474,7 +2660,36 @@
         return;
       }
 
-      // 10. Phản ứng thế muối: Fe + CuSO4, Zn + CuSO4, Zn + FeSO4
+      // 11. Phản ứng thế muối với Al: 2Al + 3MSO4 -> Al2(SO4)3 + 3M
+      if (key === 'al_cuso4' || key === 'al_feso4') {
+        const m2Sym = key === 'al_cuso4' ? 'Cu' : 'Fe';
+        const m2Col = m2Sym === 'Cu' ? '#ea580c' : '#475569';
+
+        const al1 = [lerp(w * 0.20, w * 0.40, moveT), lerp(h * 0.34, h * 0.36, moveT) + vib];
+        const al2 = [lerp(w * 0.20, w * 0.40, moveT), lerp(h * 0.66, h * 0.64, moveT) - vib];
+        const so4a = [w * 0.62, h * 0.24];
+        const so4b = [w * 0.64, h * 0.50];
+        const so4c = [w * 0.62, h * 0.76];
+        const m2a = [lerp(w * 0.82, w * 0.20, moveT), lerp(h * 0.24, h * 0.22, moveT)];
+        const m2b = [lerp(w * 0.82, w * 0.20, moveT), lerp(h * 0.76, h * 0.78, moveT)];
+
+        drawDashedBond(microCtx, m2a[0], m2a[1], so4a[0], so4a[1], '#f87171', breakAlpha);
+        drawDashedBond(microCtx, m2b[0], m2b[1], so4c[0], so4c[1], '#f87171', breakAlpha);
+
+        drawDashedBond(microCtx, al1[0], al1[1], so4a[0], so4a[1], '#34d399', formAlpha);
+        drawDashedBond(microCtx, al1[0], al1[1], so4b[0], so4b[1], '#34d399', formAlpha);
+        drawDashedBond(microCtx, al2[0], al2[1], so4b[0], so4b[1], '#34d399', formAlpha);
+        drawDashedBond(microCtx, al2[0], al2[1], so4c[0], so4c[1], '#34d399', formAlpha);
+
+        drawAtom(microCtx, al1[0], al1[1], 16, 'Al', '#6b7280');
+        drawAtom(microCtx, al2[0], al2[1], 16, 'Al', '#6b7280');
+        [so4a, so4b, so4c].forEach(pt => drawAtom(microCtx, pt[0], pt[1], 17, 'SO₄', '#0284c7'));
+        drawAtom(microCtx, m2a[0], m2a[1], 15, m2Sym, m2Col);
+        drawAtom(microCtx, m2b[0], m2b[1], 15, m2Sym, m2Col);
+        return;
+      }
+
+      // 12. Phản ứng thế muối 1-1: Fe + CuSO4, Zn + CuSO4, Zn + FeSO4
       if (key === 'fe_cuso4' || key === 'zn_cuso4' || key === 'zn_feso4') {
         const m1Sym = key.startsWith('fe') ? 'Fe' : 'Zn';
         const m2Sym = key.endsWith('cuso4') ? 'Cu' : 'Fe';
@@ -2494,9 +2709,34 @@
         return;
       }
 
-      // 11. Cu + 2AgNO3 -> Cu(NO3)2 + 2Ag (1 Cu liên kết nét đứt với 2 nhóm NO3; giải phóng 2 Ag tự do)
-      if (key === 'cu_agno3') {
-        const cu = [lerp(w * 0.22, w * 0.44, moveT), h * 0.50 + vib];
+      // 13. Al + 3AgNO3 -> Al(NO3)3 + 3Ag
+      if (key === 'al_agno3') {
+        const al = [lerp(w * 0.22, w * 0.44, moveT), h * 0.50 + vib];
+        const no3a = [w * 0.62, h * 0.24];
+        const no3b = [w * 0.64, h * 0.50];
+        const no3c = [w * 0.62, h * 0.76];
+        const ag1 = [lerp(w * 0.82, w * 0.22, moveT), lerp(h * 0.24, h * 0.24, moveT)];
+        const ag2 = [lerp(w * 0.82, w * 0.22, moveT), lerp(h * 0.76, h * 0.76, moveT)];
+
+        drawDashedBond(microCtx, ag1[0], ag1[1], no3a[0], no3a[1], '#f87171', breakAlpha);
+        drawDashedBond(microCtx, ag2[0], ag2[1], no3c[0], no3c[1], '#f87171', breakAlpha);
+
+        drawDashedBond(microCtx, al[0], al[1], no3a[0], no3a[1], '#34d399', formAlpha);
+        drawDashedBond(microCtx, al[0], al[1], no3b[0], no3b[1], '#34d399', formAlpha);
+        drawDashedBond(microCtx, al[0], al[1], no3c[0], no3c[1], '#34d399', formAlpha);
+
+        drawAtom(microCtx, al[0], al[1], 17, 'Al', '#6b7280');
+        [no3a, no3b, no3c].forEach(pt => drawAtom(microCtx, pt[0], pt[1], 16, 'NO₃', '#0284c7'));
+        drawAtom(microCtx, ag1[0], ag1[1], 14, 'Ag', '#94a3b8', '#0f172a');
+        drawAtom(microCtx, ag2[0], ag2[1], 14, 'Ag', '#94a3b8', '#0f172a');
+        return;
+      }
+
+      // 14. Cu/Zn/Fe + 2AgNO3 -> M(NO3)2 + 2Ag
+      if (key === 'cu_agno3' || key === 'zn_agno3') {
+        const mSym = benchState.metalSymbol;
+        const mCol = METALS_DATA[mSym].colorHex;
+        const mPos = [lerp(w * 0.22, w * 0.44, moveT), h * 0.50 + vib];
         const no3a = [w * 0.62, h * 0.32];
         const no3b = [w * 0.62, h * 0.68];
         const ag1 = [lerp(w * 0.80, w * 0.22, moveT), lerp(h * 0.32, h * 0.26, moveT)];
@@ -2505,10 +2745,10 @@
         drawDashedBond(microCtx, ag1[0], ag1[1], no3a[0], no3a[1], '#f87171', breakAlpha);
         drawDashedBond(microCtx, ag2[0], ag2[1], no3b[0], no3b[1], '#f87171', breakAlpha);
 
-        drawDashedBond(microCtx, cu[0], cu[1], no3a[0], no3a[1], '#34d399', formAlpha);
-        drawDashedBond(microCtx, cu[0], cu[1], no3b[0], no3b[1], '#34d399', formAlpha);
+        drawDashedBond(microCtx, mPos[0], mPos[1], no3a[0], no3a[1], '#34d399', formAlpha);
+        drawDashedBond(microCtx, mPos[0], mPos[1], no3b[0], no3b[1], '#34d399', formAlpha);
 
-        drawAtom(microCtx, cu[0], cu[1], 17, 'Cu', '#ea580c');
+        drawAtom(microCtx, mPos[0], mPos[1], 17, mSym, mCol, mSym === 'Zn' ? '#0f172a' : '#ffffff');
         drawAtom(microCtx, no3a[0], no3a[1], 17, 'NO₃', '#0284c7');
         drawAtom(microCtx, no3b[0], no3b[1], 17, 'NO₃', '#0284c7');
         drawAtom(microCtx, ag1[0], ag1[1], 15, 'Ag', '#94a3b8', '#0f172a');
@@ -2516,10 +2756,18 @@
         return;
       }
 
-      // 12. Trường hợp không phản ứng: các hạt giữ nguyên liên kết ban đầu
+      // 15. Trường hợp không phản ứng: các hạt giữ nguyên liên kết ban đầu
       const sym = benchState.metalSymbol;
       drawAtom(microCtx, w * 0.28, h * 0.50 + vib, 18, sym, METALS_DATA[sym].colorHex, '#0f172a');
-      if (benchState.vesselId === 'tube_hcl') {
+      if (benchState.vesselId === 'jar_o2') {
+        drawDashedBond(microCtx, w * 0.60, h * 0.50, w * 0.76, h * 0.50, '#38bdf8', 1);
+        drawAtom(microCtx, w * 0.60, h * 0.50, 15, 'O', '#ef4444');
+        drawAtom(microCtx, w * 0.76, h * 0.50, 15, 'O', '#ef4444');
+      } else if (benchState.vesselId === 'jar_cl2') {
+        drawDashedBond(microCtx, w * 0.60, h * 0.50, w * 0.76, h * 0.50, '#a3e635', 1);
+        drawAtom(microCtx, w * 0.60, h * 0.50, 15, 'Cl', '#16a34a');
+        drawAtom(microCtx, w * 0.76, h * 0.50, 15, 'Cl', '#16a34a');
+      } else if (benchState.vesselId === 'tube_hcl') {
         drawDashedBond(microCtx, w * 0.60, h * 0.42, w * 0.76, h * 0.42, '#38bdf8', 1);
         drawAtom(microCtx, w * 0.60, h * 0.42, 15, 'Cl', '#16a34a');
         drawAtom(microCtx, w * 0.76, h * 0.42, 12, 'H', '#0ea5e9');
@@ -2537,7 +2785,7 @@
     }
 
     // =========================================================================
-    // 9. NHIỆM VỤ 3: ĐỐI CHIẾU, GIẢI THÍCH & NỘP BÀI QUA GMAIL HỌC SINH / PDF
+    // 9. NHIỆM VỤ 3: ĐỐI CHIẾU, GIẢI THÍCH & NỘP BÀI QUA TEACHER LMS / GMAIL / PDF
     // =========================================================================
     function renderNV3() {
       const container = document.getElementById('nv3-cards-container');
@@ -2557,7 +2805,6 @@
           </div>
 
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-3.5">
-            <!-- CỘT 1: DỰ ĐOÁN BAN ĐẦU -->
             <div class="rounded-xl bg-amber-50/70 border border-amber-200/80 p-3.5 space-y-2">
               <div class="text-xs font-extrabold text-amber-900 flex items-center gap-1.5">
                 <i data-lucide="lightbulb" class="w-3.5 h-3.5"></i>
@@ -2573,7 +2820,6 @@
               </div>
             </div>
 
-            <!-- CỘT 2: KẾT QUẢ QUAN SÁT THỰC NGHIỆM -->
             <div class="rounded-xl bg-sky-50/70 border border-sky-200/80 p-3.5 space-y-2">
               <div class="text-xs font-extrabold text-sky-900 flex items-center gap-1.5">
                 <i data-lucide="eye" class="w-3.5 h-3.5"></i>
@@ -2589,7 +2835,6 @@
               </div>
             </div>
 
-            <!-- CỘT 3: GIẢI THÍCH HIỆN TƯỢNG -->
             <div class="rounded-xl bg-emerald-50/60 border border-emerald-200 p-3.5 flex flex-col">
               <label class="block text-xs font-extrabold text-emerald-900 mb-1.5">
                 Vì sao nhóm nhận biết được phản ứng có xảy ra hay không? (Kèm PTHH minh họa) <span class="text-rose-500">*</span>
@@ -2795,7 +3040,6 @@
       let lmsMessage = '';
       let submissionId = 'OK';
 
-      // 1. Gửi dữ liệu đầy đủ về hệ thống Teacher LMS
       try {
         const response = await fetch(LMS_CONFIG.API_URL, {
           method: 'POST',
@@ -2810,7 +3054,6 @@
         lmsMessage = err.message;
       }
 
-      // 2. Gửi qua Google Apps Script nếu giáo viên có cung cấp liên kết
       let gasSent = false;
       if (gasUrl) {
         try {
@@ -2826,7 +3069,6 @@
         }
       }
 
-      // 3. Đồng thời mở Gmail soạn sẵn toàn bộ nội dung bài làm gửi về Gmail giáo viên
       if (teacherEmail) {
         openGmailCompose(teacherEmail, groupName, plainReport);
       }
